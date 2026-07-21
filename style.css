@@ -1601,6 +1601,7 @@ html.dark-theme .hljs {
 
     .preview-content {
         overflow: visible;
+        content-visibility: visible;
     }
 
     .preview-content pre {
