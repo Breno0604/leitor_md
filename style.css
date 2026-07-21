@@ -1571,6 +1571,10 @@ html.dark-theme .hljs {
 ============================================= */
 
 @media print {
+    @page {
+        margin: 2cm;
+    }
+
     .header,
     .footer,
     .panel-header,
@@ -1585,13 +1589,6 @@ html.dark-theme .hljs {
     body {
         background: white;
         overflow: visible;
-        height: auto;
-    }
-
-    .main {
-        flex-direction: column;
-        overflow: visible;
-        height: auto;
     }
 
     .editor-panel {
@@ -1600,13 +1597,10 @@ html.dark-theme .hljs {
 
     .preview-panel {
         overflow: visible;
-        height: auto;
     }
 
     .preview-content {
         overflow: visible;
-        padding: 0;
-        max-width: 100%;
     }
 
     .preview-content pre {
