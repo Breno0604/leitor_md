@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Leitor de Markdown - Visualize Markdown em tempo real com syntax highlighting, KaTeX e Mermaid">
+    <title>Leitor Markdown</title>
+
+    <!-- ========================================
+         FONTE INTER — Tipografia limpa e moderna
+         Inspirada no Google Tradutor
+    ========================================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- ========================================
+         HIGHLIGHT.JS — Syntax highlighting para blocos de código
+         Tema GitHub Light usado no preview
+    ========================================= -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+
+    <!-- ========================================
+         KATEX — Renderização de fórmulas matemáticas LaTeX
+         CSS necessário para estilização das fórmulas
+    ========================================= -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+
+    <!-- ========================================
+         ESTILO PRINCIPAL DA APLICAÇÃO
+    ========================================= -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ========================================
+         CABEÇALHO FIXO — Logo, título e controles
+         Inspirado na barra superior do Google Tradutor
+    ========================================= -->
+    <header class="header">
+        <div class="header-left">
+            <!-- Ícone de logo com gradiente azul -->
+            <div class="logo" aria-hidden="true">M</div>
+            <div class="header-title">
+                <h1>Leitor Markdown</h1>
+                <span class="header-subtitle">Visualize Markdown em tempo real</span>
+            </div>
+        </div>
+        <div class="header-controls">
+            <!-- Botão para alternar tema claro/escuro (atalho: Ctrl+D) -->
+            <button class="btn btn-icon" id="btnTheme" title="Alternar tema (Ctrl+D)" aria-label="Alternar tema claro/escuro">
+                <svg id="themeIconLight" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg id="themeIconDark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <!-- Botão para alternar modo foco (atalho: Ctrl+Shift+F) -->
+            <button class="btn btn-icon" id="btnFocus" title="Alternar modo foco (Ctrl+Shift+F)" aria-label="Alternar modo foco">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+                    <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
+                    <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+                    <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+            </button>
+            <!-- Botão para alternar wrap do editor (atalho: Ctrl+W) -->
+            <button class="btn btn-icon" id="btnWrap" title="Alternar quebra de linha (Ctrl+W)" aria-label="Alternar quebra de linha">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ========================================
+         ÁREA PRINCIPAL — Dois painéis lado a lado
+         Painel esquerdo: editor de texto
+         Painel direito: preview renderizado
+    ========================================= -->
+    <main class="main">
+        <!-- ====== PAINEL ESQUERDO — EDITOR ====== -->
+        <div class="panel editor-panel">
+            <div class="panel-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span class="panel-label" title="Editor Markdown">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                        </svg>
+                    </span>
+                    <!-- Indicador do nome do arquivo (aparece ao abrir um arquivo) -->
+                    <span class="file-indicator" id="fileIndicator" style="display:none">
+                        <span class="file-indicator-dot"></span>
+                        <span class="file-indicator-name" id="fileName"></span>
+                    </span>
+                </div>
+                <!-- Barra de ações do editor -->
+                <div class="panel-actions">
+                    <!-- Abrir arquivo .md (input de arquivo oculto) -->
+                    <button class="btn btn-tool" id="btnOpen" title="Abrir arquivo .md" aria-label="Abrir arquivo .md">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </button>
+                    <input type="file" id="fileInput" accept=".md,.markdown,.txt" hidden>
+                    <!-- Copiar o Markdown bruto -->
+                    <button class="btn btn-tool" id="btnCopyMd" title="Copiar Markdown" aria-label="Copiar Markdown" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                    <!-- Salvar como arquivo .md -->
+                    <button class="btn btn-tool" id="btnSave" title="Salvar como .md" aria-label="Salvar como .md" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                    </button>
+                    <!-- Limpar todo o conteúdo -->
+                    <button class="btn btn-tool btn-danger" id="btnClear" title="Limpar texto" aria-label="Limpar conteúdo">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                    <!-- Desfazer (aparece após limpar) -->
+                    <button class="btn btn-tool" id="btnUndo" title="Desfazer limpar" style="display:none" aria-label="Desfazer limpeza">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                    </button>
+                    <!-- Expandir painel -->
+                    <button class="btn btn-tool" id="btnExpandEditor" title="Expandir editor" aria-label="Expandir editor">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Textarea principal — onde o usuário digita/cola Markdown -->
+            <div class="editor-wrap" id="editorWrap">
+                <!-- Overlay de drag and drop -->
+                <div class="drag-overlay" id="dragOverlay">
+                    <div class="drag-overlay-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <span class="drag-overlay-text">Solte o arquivo aqui</span>
+                </div>
+                <textarea
+                    id="editor"
+                    placeholder="Digite ou cole seu Markdown aqui..."
+                    spellcheck="false"
+                    autocomplete="off"
+                    aria-label="Editor Markdown"
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- ====== DIVISÓRIA VISUAL ENTRE PAINÉIS ====== -->
+        <div class="divider" aria-hidden="true">
+            <div class="divider-handle"></div>
+        </div>
+
+        <!-- ====== PAINEL DIREITO — PREVIEW ====== -->
+        <div class="panel preview-panel">
+            <div class="panel-header">
+                <span class="panel-label" title="Preview">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </span>
+                <div class="panel-actions">
+                    <!-- Copiar o HTML renderizado -->
+                    <button class="btn btn-tool" id="btnCopyHtml" title="Copiar HTML renderizado" aria-label="Copiar HTML renderizado" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </button>
+                    <!-- Exportar como arquivo .html -->
+                    <button class="btn btn-tool" id="btnExport" title="Exportar como .html" aria-label="Exportar como HTML" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
+                    <!-- Exportar como PDF (atalho: Ctrl+P) -->
+                    <button class="btn btn-tool" id="btnExportPdf" title="Exportar como PDF (Ctrl+P)" aria-label="Exportar como PDF" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </button>
+                    <!-- Expandir painel -->
+                    <button class="btn btn-tool" id="btnExpandPreview" title="Expandir preview" aria-label="Expandir preview">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Container do preview renderizado -->
+            <div id="preview" class="preview-content" aria-live="polite" aria-label="Preview renderizado">
+                <div class="preview-empty">
+                    <div class="preview-empty-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <p class="preview-empty-title">Nenhum conteúdo para exibir</p>
+                    <p class="preview-empty-text">
+                        Digite Markdown no painel esquerdo,<br>
+                        cole conteúdo ou arraste um arquivo <code>.md</code>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================
+         RODAPÉ — Estatísticas e indicadores
+         Contadores de palavras, caracteres, linhas e tempo de leitura
+    ========================================= -->
+    <footer class="footer">
+        <div class="footer-stats">
+            <!-- Contador de palavras -->
+            <span class="stat" id="statWords" title="Palavras">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 7V4h16v3"></path>
+                    <path d="M9 20h6"></path>
+                    <path d="M12 4v16"></path>
+                </svg>
+                <span id="wordCount">0</span> palavras
+            </span>
+            <!-- Separador visual -->
+            <span class="stat-sep" aria-hidden="true">|</span>
+            <!-- Contador de caracteres -->
+            <span class="stat" id="statChars" title="Caracteres">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                </svg>
+                <span id="charCount">0</span> caracteres
+            </span>
+            <span class="stat-sep" aria-hidden="true">|</span>
+            <!-- Contador de linhas -->
+            <span class="stat" id="statLines" title="Linhas">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="17" y1="10" x2="3" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="17" y1="18" x2="3" y2="18"></line>
+                </svg>
+                <span id="lineCount">0</span> linhas
+            </span>
+            <span class="stat-sep" aria-hidden="true">|</span>
+            <!-- Tempo estimado de leitura -->
+            <span class="stat" id="statTime" title="Tempo estimado de leitura">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span id="readTime">0</span> min de leitura
+            </span>
+        </div>
+
+        <!-- Indicador de status (salvo localmente / renderizado) -->
+        <div class="footer-status">
+            <span id="statusIndicator" class="status-badge status-saved" title="Status">
+                <span class="status-dot"></span>
+                Pronto
+            </span>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         BOTÃO SCROLL TO TOP
+         Aparece quando o usuário rola para baixo
+    ========================================= -->
+    <button class="scroll-top-btn" id="scrollTopBtn" title="Voltar ao topo" aria-label="Voltar ao topo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <!-- ========================================
+         BIBLIOTECAS EXTERNAS (via CDN)
+         Carregadas na ordem correta de dependência
+    ========================================= -->
+
+    <!-- Marked.js — Parser Markdown para HTML (mais rápido e completo) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js"></script>
+
+    <!-- DOMPurify — Sanitização de HTML para prevenir ataques XSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js"></script>
+
+    <!-- Highlight.js — Syntax highlighting para blocos de código -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- KaTeX — Renderização de fórmulas matemáticas LaTeX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+
+    <!-- Mermaid.js — Renderização de diagramas (flowcharts, sequence, etc.) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+
+    <!-- ========================================
+         SCRIPT PRINCIPAL DA APLICAÇÃO
+    ========================================= -->
+    <script src="script.js"></script>
+</body>
+</html>

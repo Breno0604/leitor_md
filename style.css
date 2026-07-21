@@ -1,0 +1,1642 @@
+/* =============================================
+   LEITOR MARKDOWN — Folha de Estilos Principal
+   =============================================
+   Design inspirado no Google Tradutor:
+   - Interface limpa e moderna
+   - Dois painéis lado a lado
+   - Tipografia excelente
+   - Bordas suaves e cantos arredondados
+   - Totalmente responsivo
+   ============================================= */
+
+
+/* =============================================
+   1. VARIÁVEIS CSS — Sistema de Design
+   =============================================
+   Todas as cores, fontes e espaçamentos são
+   definidos aqui para fácil manutenção e
+   possibilidade de temas futuros.
+============================================= */
+
+:root {
+    /* Cores de fundo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f1f3f4;
+    --bg-editor: #1e1e2e;
+
+    /* Cores de texto */
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --text-muted: #9aa0a6;
+    --text-on-dark: #e0e0e0;
+    --text-placeholder: #9aa0a6;
+
+    /* Cor de destaque (azul Google) */
+    --accent: #4285f4;
+    --accent-hover: #3367d6;
+    --accent-light: #e8f0fe;
+
+    /* Bordas */
+    --border: #dadce0;
+    --border-light: #e8eaed;
+    --border-focus: #4285f4;
+
+    /* Sombras — efeitos de profundidade sutis */
+    --shadow-sm: 0 1px 2px rgba(60,64,67,0.1);
+    --shadow-md: 0 1px 3px rgba(60,64,67,0.15);
+    --shadow-lg: 0 4px 6px rgba(60,64,67,0.15);
+
+    /* Tipografia */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+    /* Espaçamentos */
+    --header-height: 56px;
+    --footer-height: 40px;
+    --panel-gap: 0px;
+    --panel-padding: 0;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Transições */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+
+
+/* =============================================
+   1b. TEMA ESCURO
+   =============================================
+   Variáveis CSS sobrescritas quando o tema
+   escuro está ativado. Ativado via classe
+   "dark-theme" no <html>.
+============================================= */
+
+html.dark-theme {
+    --bg-primary: #1a1b26;
+    --bg-secondary: #16161e;
+    --bg-tertiary: #24283b;
+    --bg-editor: #1a1b26;
+
+    --text-primary: #c0caf5;
+    --text-secondary: #a9b1d6;
+    --text-muted: #565f89;
+    --text-on-dark: #c0caf5;
+    --text-placeholder: #565f89;
+
+    --accent: #7aa2f7;
+    --accent-hover: #89b4fa;
+    --accent-light: #1e2030;
+
+    --border: #3b4261;
+    --border-light: #292e42;
+    --border-focus: #7aa2f7;
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 1px 3px rgba(0,0,0,0.4);
+    --shadow-lg: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+
+/* =============================================
+   2. RESET E ESTILOS BASE
+   =============================================
+   Remove estilos padrão do navegador e
+   estabelece um foundation consistente.
+============================================= */
+
+/* Box-sizing universal — facilita cálculos de layout */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Configuração do documento */
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Body ocupa toda a viewport, empilha elementos verticalmente */
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    overflow: hidden;
+}
+
+
+/* =============================================
+   3. CABEÇALHO (HEADER)
+   =============================================
+   Barra fixa no topo com logo, título e
+   controles. Inspirado na barra do Google
+   Tradutor com fundo branco e borda sutil.
+============================================= */
+
+.header {
+    height: var(--header-height);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+/* Grupo esquerdo: logo + título */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Logo com gradiente azul — visual distinctivo */
+.logo {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #4285f4, #34a853);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+}
+
+/* Título e subtítulo do header */
+.header-title h1 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+
+.header-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Controles do header (lado direito) */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* =============================================
+   4. SISTEMA DE BOTÕES
+   =============================================
+   Dois tipos de botões:
+   - btn-icon: apenas ícone (header)
+   - btn-tool: ícone + texto (painéis)
+============================================= */
+
+/* Botão genérico — base para todos */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    user-select: none;
+    line-height: 1;
+}
+
+/* Botão apenas com ícone (menor, no header) */
+.btn-icon {
+    padding: 7px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+}
+
+/* Efeito hover — torna o botão mais visível */
+.btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+/* Botão de ação nos painéis — estilo mais discreto */
+.btn-tool {
+    padding: 5px 10px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-size: 12px;
+}
+
+.btn-tool:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Botão de perigo (limpar) — vermelho no hover */
+.btn-danger:hover {
+    background: #fce8e6;
+    color: #d93025;
+    border-color: #fce8e6;
+}
+
+/* Botão de tema — indicador de estado ativo */
+.btn-theme-active {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+/* Botão desabilitado — feedback visual claro */
+.btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Botão de ação principal — fundo azul */
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: white;
+}
+
+
+/* =============================================
+   5. ÁREA PRINCIPAL (MAIN)
+   =============================================
+   Layout flexbox com dois painéis lado a lado.
+   Em telas pequenas, os painéis empilham
+   verticalmente (via media query).
+============================================= */
+
+.main {
+    flex: 1;
+    display: flex;
+    gap: var(--panel-gap);
+    overflow: hidden;
+    min-height: 0;
+    transition: all var(--transition-normal);
+}
+
+/* =============================================
+    5b. MODO FOCO
+    =============================================
+    Ciclo: ambos visíveis → só editor → só preview.
+    Transição suave com CSS.
+   ============================================= */
+
+/* Só editor visível */
+.main.focus-editor .preview-panel,
+.main.focus-editor .divider {
+    display: none;
+}
+
+.main.focus-editor .editor-panel {
+    flex: 1 1 100% !important;
+}
+
+/* Só preview visível */
+.main.focus-preview .editor-panel,
+.main.focus-preview .divider {
+    display: none;
+}
+
+.main.focus-preview .preview-panel {
+    flex: 1 1 100% !important;
+}
+
+
+/* =============================================
+   6. PAINÉIS — Editor e Preview
+   =============================================
+   Cada painéis tem:
+   - Cabeçalho com label e ações
+   - Área de conteúdo flexível
+   - Bordas e cantos arredondados
+============================================= */
+
+.panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Cabeçalho do painel — barra de ações */
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+    min-height: 44px;
+}
+
+/* Label do painel — ícone com tooltip */
+.panel-label {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    cursor: default;
+}
+
+.panel-label svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Grupo de botões de ação do painel */
+.panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+
+/* =============================================
+   7. PAINEL DO EDITOR — Textarea
+   =============================================
+   Fundo escuro estilo editor de código.
+   Fonte monoespaçada para alinhamento.
+   Placeholder estilizado.
+============================================= */
+
+.editor-panel {
+    background: var(--bg-editor);
+}
+
+/* Wrapper do textarea — preenche todo o espaço disponível */
+.editor-wrap {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Textarea principal */
+.editor-wrap textarea {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border: none;
+    outline: none;
+    resize: none;
+    background: var(--bg-editor);
+    color: var(--text-on-dark);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    tab-size: 4;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+}
+
+/* Texto de placeholder do textarea */
+.editor-wrap textarea::placeholder {
+    color: #6c7086;
+    font-style: italic;
+}
+
+/* Scrollbar personalizada para o editor (WebKit) */
+.editor-wrap textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.editor-wrap textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editor-wrap textarea::-webkit-scrollbar-thumb {
+    background: #45475a;
+    border-radius: 4px;
+}
+
+.editor-wrap textarea::-webkit-scrollbar-thumb:hover {
+    background: #585b70;
+}
+
+
+/* =============================================
+   8. DIVISÓRIA ENTRE PAINÉIS
+   =============================================
+   Linha visual separando editor e preview.
+   Inclui uma "puxa" circular decorativa.
+============================================= */
+
+.divider {
+    width: 6px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    cursor: col-resize;
+    transition: background var(--transition-fast);
+}
+
+/* Divisória ativa durante arrasto */
+.divider-active,
+.divider:hover {
+    background: var(--accent);
+}
+
+/* Puxa circular na divisória — indicador visual */
+.divider-handle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+    transition: all var(--transition-fast);
+    pointer-events: none;
+}
+
+/* Efeito hover na divisória */
+.divider:hover .divider-handle {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* Divisória ativa — puxa maior */
+.divider-active .divider-handle {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-light);
+    transform: scale(1.1);
+}
+
+
+/* =============================================
+   9. PAINEL DO PREVIEW — Conteúdo Renderizado
+   =============================================
+   Fundo branco com tipografia otimizada
+   para leitura. Estilos para todos os
+   elementos Markdown renderizados.
+============================================= */
+
+.preview-panel {
+    background: var(--bg-primary);
+}
+
+/* Container do preview — scroll e padding */
+.preview-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px 32px;
+    line-height: 1.7;
+    scroll-behavior: smooth;
+    content-visibility: auto;
+    contain-intrinsic-size: 500px;
+}
+
+/* Mensagem de estado vazio */
+.preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 300px;
+    text-align: center;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.preview-empty-icon {
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+
+.preview-empty-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.preview-empty-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.preview-empty-text code {
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Esconder mensagem de vazio quando há conteúdo */
+.preview-content.has-content .preview-empty {
+    display: none;
+}
+
+
+/* =============================================
+   10. ESTILOS DO CONTEÚDO RENDERIZADO
+   =============================================
+   Estes estilos se aplicam ao HTML gerado
+   pelo parser Markdown. Cobre todos os
+   elementos: títulos, parágrafos, listas,
+   tabelas, código, citações, etc.
+============================================= */
+
+/* === Títulos (h1 a h6) === */
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6 {
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.preview-content h1 {
+    font-size: 2em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.preview-content h2 {
+    font-size: 1.5em;
+    padding-bottom: 0.25em;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.preview-content h3 { font-size: 1.25em; }
+.preview-content h4 { font-size: 1.1em; }
+.preview-content h5 { font-size: 1em; }
+.preview-content h6 { font-size: 0.9em; color: var(--text-secondary); }
+
+/* Primeiro título sem margem superior */
+.preview-content > h1:first-child,
+.preview-content > h2:first-child,
+.preview-content > h3:first-child {
+    margin-top: 0;
+}
+
+
+/* === Parágrafos === */
+.preview-content p {
+    margin-bottom: 1em;
+    color: var(--text-primary);
+}
+
+
+/* === Ênfase (negrito, itálico, tachado) === */
+.preview-content strong { font-weight: 600; }
+.preview-content em { font-style: italic; }
+.preview-content del { text-decoration: line-through; color: var(--text-secondary); }
+
+
+/* === Links === */
+.preview-content a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.preview-content a:hover {
+    color: var(--accent-hover);
+    border-bottom-color: var(--accent-hover);
+}
+
+
+/* === Imagens === */
+.preview-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: 1em 0;
+    box-shadow: var(--shadow-sm);
+    display: block;
+}
+
+
+/* === Listas (ordenadas e não ordenadas) === */
+.preview-content ul,
+.preview-content ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.preview-content li {
+    margin-bottom: 0.3em;
+    line-height: 1.7;
+}
+
+/* Listas aninhadas */
+.preview-content li > ul,
+.preview-content li > ol {
+    margin-top: 0.3em;
+    margin-bottom: 0;
+}
+
+
+/* === Checkboxes (Task Lists) === */
+.preview-content ul.contains-task-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.preview-content li.task-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    list-style: none;
+    margin-left: -1.5em;
+}
+
+.preview-content input[type="checkbox"] {
+    margin-top: 5px;
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+
+/* === Citações (Blockquotes) === */
+.preview-content blockquote {
+    margin: 1.2em 0;
+    padding: 12px 20px;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--text-primary);
+}
+
+.preview-content blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* Citações aninhadas */
+.preview-content blockquote blockquote {
+    margin: 0.8em 0;
+    background: transparent;
+    border-left-color: var(--text-muted);
+}
+
+
+/* === Blocos de Código === */
+.preview-content pre {
+    margin: 1.2em 0;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    background: #f6f8fa;
+    border: 1px solid var(--border-light);
+    position: relative;
+    transition: border-color var(--transition-fast);
+}
+
+/* Cabeçalho do code block (mostra linguagem + botão copiar) */
+.preview-content pre code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #eef1f5;
+    border-bottom: 1px solid var(--border-light);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Botão copiar dentro do code block */
+.preview-content pre code-header .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-sans);
+}
+
+.preview-content pre code-header .copy-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* Código inline dentro de parágrafos */
+.preview-content :not(pre) > code {
+    background: #f0f0f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: #d63384;
+    word-break: break-word;
+}
+
+
+/* === Tabelas === */
+.preview-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2em 0;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.preview-content thead {
+    background: var(--bg-tertiary);
+}
+
+.preview-content th {
+    padding: 10px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+}
+
+.preview-content td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.preview-content tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.preview-content tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+
+/* === Linhas Horizontais === */
+.preview-content hr {
+    border: none;
+    height: 2px;
+    background: var(--border-light);
+    margin: 2em 0;
+    border-radius: 1px;
+}
+
+
+/* === Notas de Rodapé (Footnotes) === */
+.preview-content .footnotes {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid var(--border-light);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.preview-content .footnotes ol {
+    padding-left: 1.5em;
+}
+
+.preview-content sup a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+
+/* === Código Mermaid (diagramas) === */
+.preview-content .mermaid {
+    text-align: center;
+    margin: 1.5em 0;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    overflow-x: auto;
+}
+
+.preview-content .mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Fallback quando Mermaid não renderiza */
+.preview-content .mermaid-error {
+    padding: 16px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: var(--radius-md);
+    color: #856404;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+
+/* === Fórmulas Matemáticas (KaTeX) === */
+.preview-content .math-block {
+    margin: 1.2em 0;
+    text-align: center;
+    overflow-x: auto;
+    padding: 8px 0;
+}
+
+.preview-content .math-inline {
+    padding: 0 2px;
+}
+
+/* Fallback quando KaTeX falha */
+.preview-content .math-error {
+    color: #d93025;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: #fce8e6;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
+/* === Códigos de erro gerais === */
+.preview-content .render-error {
+    padding: 16px;
+    background: #fce8e6;
+    border: 1px solid #f5c6cb;
+    border-radius: var(--radius-md);
+    color: #d93025;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+
+/* =============================================
+   11. RODAPÉ (FOOTER)
+   =============================================
+   Barra inferior com estatísticas e indicador
+   de status. Compacta e discreta.
+============================================= */
+
+.footer {
+    height: var(--footer-height);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    z-index: 100;
+}
+
+/* Container das estatísticas */
+.footer-stats {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Est individual */
+.stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Separador visual entre estatísticas */
+.stat-sep {
+    color: var(--border);
+    margin: 0 2px;
+}
+
+/* Badge de status */
+.footer-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* Indicador verde — pronto/salvo */
+.status-saved {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* Indicador azul — renderizando */
+.status-rendering {
+    background: var(--accent-light);
+    color: var(--accent);
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* Indicador vermelho — erro */
+.status-error {
+    background: #fce8e6;
+    color: #d93025;
+}
+
+
+/* =============================================
+   12. ANIMAÇÕES
+   =============================================
+   Micro-animações para feedback visual.
+============================================= */
+
+/* Pulso suave para indicadores de loading */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Transição de fade-in para conteúdo renderizado */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Aplicar fade-in ao conteúdo que aparece */
+.preview-content > *:not(.preview-empty) {
+    animation: fadeIn 200ms ease-out;
+}
+
+
+/* =============================================
+   13. SCROLLBAR PERSONALIZADA
+   =============================================
+   Scrollbars sutis que não desestabilizam
+   o layout mas são funcionais.
+============================================= */
+
+/* WebKit (Chrome, Safari, Edge) */
+.preview-content::-webkit-scrollbar,
+.editor-wrap textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.preview-content::-webkit-scrollbar-track,
+.editor-wrap textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.preview-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.preview-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+
+/* =============================================
+   14. SELETOR DE TEXTO E FOCO
+   =============================================
+   Controle de acessibilidade e UX.
+============================================= */
+
+/* Cor de seleção do texto */
+::selection {
+    background: rgba(66, 133, 244, 0.3);
+}
+
+/* Focus ring acessível — visível apenas via teclado */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+
+/* =============================================
+   15. RESPONSIVIDADE — Design Mobile-First
+   =============================================
+   Breakpoints:
+   - 768px: painéis empilham verticalmente
+   - 480px: ajustes finos para mobile
+============================================= */
+
+/* Tablet e telas médias — painéis empilham */
+@media (max-width: 768px) {
+    .header {
+        padding: 0 12px;
+    }
+
+    .header-title h1 {
+        font-size: 15px;
+    }
+
+    .header-subtitle {
+        display: none;
+    }
+
+    .main {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .divider {
+        width: 100%;
+        height: 6px;
+        cursor: row-resize;
+    }
+
+    .divider-active,
+    .divider:hover {
+        background: var(--accent);
+    }
+
+    .divider-handle {
+        width: 20px;
+        height: 20px;
+        border-width: 1.5px;
+    }
+
+    /* Editor com altura fixa em mobile */
+    .editor-panel {
+        flex: none;
+        height: 35vh;
+        min-height: 180px;
+    }
+
+    .preview-content {
+        padding: 16px;
+    }
+
+    .footer {
+        padding: 0 12px;
+    }
+
+    /* Ajustar padding dos botões em mobile */
+    .btn-tool {
+        padding: 6px 8px;
+    }
+
+    /* Tabelas responsivas em mobile */
+    .preview-content table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mobile pequeno — ajustes finos */
+@media (max-width: 480px) {
+    .header {
+        height: 48px;
+        padding: 0 10px;
+    }
+
+    .logo {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .header-title h1 {
+        font-size: 14px;
+    }
+
+    .footer {
+        height: 36px;
+        font-size: 11px;
+    }
+
+    .stat-sep {
+        display: none;
+    }
+
+    .footer-stats {
+        gap: 10px;
+    }
+
+    .editor-panel {
+        height: 30vh;
+        min-height: 150px;
+    }
+
+    .preview-content {
+        padding: 12px;
+    }
+
+    /* Tipografia menor em mobile */
+    .preview-content h1 { font-size: 1.6em; }
+    .preview-content h2 { font-size: 1.3em; }
+    .preview-content h3 { font-size: 1.1em; }
+}
+
+
+/* =============================================
+   16. UTILITÁRIOS
+   =============================================
+   Classes auxiliares reutilizáveis.
+============================================= */
+
+/* Esconder visualmente mas manter acessível */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Toast — notificação no canto inferior direito */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    transform: translateY(0);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    background: #323232;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    max-width: 400px;
+    cursor: default;
+}
+
+/* Toast de sucesso */
+.toast-success {
+    background: #1e7e34;
+}
+
+/* Toast de erro */
+.toast-error {
+    background: #d93025;
+}
+
+/* Toast de aviso */
+.toast-warning {
+    background: #e37400;
+}
+
+/* Toast com ícone */
+.toast-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+/* Botão fechar do toast */
+.toast-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    line-height: 1;
+    transition: background var(--transition-fast);
+    padding: 0;
+}
+
+.toast-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Animação de entrada/saída do toast */
+.toast-enter {
+    animation: toastIn 250ms ease-out;
+}
+
+.toast-exit {
+    animation: toastOut 250ms ease-in forwards;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(12px); }
+}
+
+
+/* =============================================
+   17. OVERLAY DE DRAG AND DROP
+   =============================================
+   Overlay transparente que aparece quando
+   o usuário arrasta um arquivo sobre a área
+   do editor.
+============================================= */
+
+.drag-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(66, 133, 244, 0.08);
+    border: 2px dashed var(--accent);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.drag-overlay.active {
+    opacity: 1;
+}
+
+.drag-overlay-icon {
+    color: var(--accent);
+    opacity: 0.7;
+}
+
+.drag-overlay-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+}
+
+
+/* =============================================
+   18. HOVER NOS BLOCOS DE CÓDIGO
+   =============================================
+   Efeito visual sutil ao passar o mouse
+   sobre blocos de código no preview.
+============================================= */
+
+.preview-content pre:hover {
+    border-color: var(--accent);
+}
+
+.preview-content pre:hover code-header .copy-btn {
+    opacity: 1;
+}
+
+.preview-content pre code-header .copy-btn {
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+}
+
+
+/* =============================================
+   19. TABELAS ZEBRA
+   =============================================
+   Linhas alternadas nas tabelas para
+   melhorar a leitura.
+============================================= */
+
+.preview-content tbody tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+.preview-content tbody tr:nth-child(even):hover {
+    background: var(--bg-tertiary);
+}
+
+
+/* =============================================
+   20. BOTÃO SCROLL TO TOP
+   =============================================
+   Botão flutuante que aparece quando
+   o usuário rola para baixo no preview.
+============================================= */
+
+.scroll-top-btn {
+    position: fixed;
+    bottom: 60px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    z-index: 90;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all var(--transition-normal);
+    pointer-events: none;
+}
+
+.scroll-top-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.scroll-top-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+
+/* =============================================
+   21. INDICADOR DE ARQUIVO
+   =============================================
+   Badge que mostra o nome do arquivo aberto
+   no header do editor.
+============================================= */
+
+.file-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-indicator-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34a853;
+    flex-shrink: 0;
+}
+
+.file-indicator.modified .file-indicator-dot {
+    background: #fbbc04;
+}
+
+
+/* =============================================
+   22. ESTILOS DARK MODE PARA CONTEÚDO
+   =============================================
+   Ajustes específicos do conteúdo renderizado
+   quando o tema escuro está ativo.
+============================================= */
+
+html.dark-theme .preview-content pre {
+    background: #24283b;
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content pre code-header {
+    background: #1e2030;
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content :not(pre) > code {
+    background: #24283b;
+    color: #bb9af7;
+}
+
+html.dark-theme .preview-content blockquote {
+    background: #1e2030;
+    border-left-color: #7aa2f7;
+}
+
+html.dark-theme .preview-content table {
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content th {
+    background: #24283b;
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content td {
+    border-color: #292e42;
+}
+
+html.dark-theme .preview-content tbody tr:hover {
+    background: #292e42;
+}
+
+html.dark-theme .preview-content tbody tr:nth-child(even) {
+    background: #1e2030;
+}
+
+html.dark-theme .preview-content .mermaid {
+    background: #1e2030;
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content .mermaid-error {
+    background: #3b2e1e;
+    border-color: #e0af68;
+    color: #e0af68;
+}
+
+html.dark-theme .preview-content .math-error {
+    background: #3b2020;
+    color: #f7768e;
+}
+
+html.dark-theme .preview-content .render-error {
+    background: #3b2020;
+    border-color: #f7768e;
+    color: #f7768e;
+}
+
+html.dark-theme .preview-content hr {
+    background: #3b4261;
+}
+
+html.dark-theme .preview-content .footnotes {
+    border-color: #3b4261;
+}
+
+html.dark-theme .preview-content a {
+    color: #7aa2f7;
+}
+
+html.dark-theme .preview-content a:hover {
+    color: #89b4fa;
+}
+
+html.dark-theme .preview-content strong {
+    color: #e0e0e0;
+}
+
+/* Highlight.js dark theme override */
+html.dark-theme .hljs {
+    background: #24283b !important;
+    color: #c0caf5 !important;
+}
+
+
+/* =============================================
+   23. PRINT STYLES
+   =============================================
+   Estilos otimizados para impressão.
+   Esconde elementos irrelevantes e otimiza
+   a formatação do conteúdo.
+============================================= */
+
+@media print {
+    .header,
+    .footer,
+    .panel-header,
+    .divider,
+    .scroll-top-btn,
+    .copy-btn,
+    .btn,
+    .toast {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        overflow: visible;
+        height: auto;
+    }
+
+    .main {
+        flex-direction: column;
+        overflow: visible;
+        height: auto;
+    }
+
+    .editor-panel {
+        display: none !important;
+    }
+
+    .preview-panel {
+        overflow: visible;
+        height: auto;
+    }
+
+    .preview-content {
+        overflow: visible;
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .preview-content pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .preview-content table {
+        page-break-inside: avoid;
+    }
+
+    .preview-content h1,
+    .preview-content h2,
+    .preview-content h3 {
+        page-break-after: avoid;
+    }
+
+    .preview-content img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    a[href^="#"]::after,
+    a[href^="javascript:"]::after {
+        content: "";
+    }
+}
