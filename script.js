@@ -1209,6 +1209,7 @@ function exportHtml() {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -1237,10 +1238,12 @@ function exportHtml() {
         ul, ol { margin-bottom: 1em; padding-left: 2em; }
         li { margin-bottom: 0.3em; }
         .math-block { text-align: center; margin: 1em 0; overflow-x: auto; }
+        .mermaid { text-align: center; margin: 1em 0; }
     </style>
 </head>
 <body>
 ${cleanHtml}
+<script>document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('code.language-mermaid').forEach(function(el){var p=el.closest('pre');if(!p)return;var d=document.createElement('div');d.className='mermaid';d.textContent=el.textContent;p.replaceWith(d)});mermaid.initialize({startOnLoad:false,theme:'default'});mermaid.run({querySelector:'.mermaid'})});<\/script>
 </body>
 </html>`;
 
